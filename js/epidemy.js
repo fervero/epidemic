@@ -1,8 +1,4 @@
-var vacEfficiency = 0.95,
-    infectionProbability = 0.3,
-    cellSize = 9,
-    viableGenerations = 4;
-var Person = function(x, y) {
+ function Person(x, y) {
 // to be called with constructor calls
     this.x = x || Math.random();
     this.y = y || Math.random();
@@ -10,12 +6,15 @@ var Person = function(x, y) {
     this.generation = 0;
     return this;
 }
+Person.prototype.vacEfficiency = 0.95;
+Person.prototype.infectionProbability = 1;
+Person.prototype.viableGenerations = 4;
 Person.prototype.vaccinate = function() {
     this.state = this.state | 1;
 }
 Person.prototype.infect = function() {
     this.state = this.state | 2;
-    this.generation = viableGenerations;
+    this.generation = this.viableGenerations;
 }
 Person.prototype.isVaccinated = function() {
     return ((this.state & 1) === 1);
@@ -41,7 +40,7 @@ Person.prototype.updateGeneration = function() {
 }
 
 Person.prototype.kissForward = function(anotherPerson) {
-    var chance = infectionProbability * ( anotherPerson.isVaccinated() ? (1-vacEfficiency) : 1 );
+    var chance = this.infectionProbability * ( anotherPerson.isVaccinated() ? (1-this.vacEfficiency) : 1 );
     if (Math.random() < chance) {
         anotherPerson.mark();
     }
@@ -50,7 +49,7 @@ Person.prototype.kissForward = function(anotherPerson) {
 Person.prototype.kissBack = function(anotherPerson) {
     if (!(anotherPerson.isContagious()))
         return;
-    var chance = infectionProbability * ( this.isVaccinated() ? (1-vacEfficiency) : 1 );
+    var chance = this.infectionProbability * ( this.isVaccinated() ? (1-this.vacEfficiency) : 1 );
     if ( Math.random() < chance)
         this.mark();
 }
@@ -62,7 +61,7 @@ Person.prototype.kiss = function(anotherPerson) {
         this.kissForward(anotherPerson);
 }
 
-var Cell = function(n) {
+function Cell(n) {
 // to be called with constructor calls
     this.size = n;
     this.popArray = [];
@@ -127,21 +126,27 @@ Cell.prototype.kiss = function(args) {
         }
     }
 }
-var Population = function(size) {
-    this.cellSize = cellSize;
+
+function Population(size) {
+    var cellSize = Population.prototype.cellSize;
+    console.log(Person.prototype.infectionProbability = Population.prototype.R0/(5 * Population.prototype.cellSize - 1) / Person.prototype.viableGenerations);
     this.generation = 0;
-    this.x = Math.round(Math.sqrt(size * 3 / this.cellSize / 2));
-    this.y = Math.round(size/ this.x / this.cellSize);
+    this.x = Math.round(Math.sqrt(size * 3 / cellSize / 2));
+    this.y = Math.round(size/ this.x / cellSize);
     this.popArray = [];
     var row;
     for(var i = 0; i < this.x; i++) {
         row = [];
         for(var j=0; j < this.y; j++)
-            row.push(new Cell(this.cellSize));
+            row.push(new Cell(cellSize));
         this.popArray.push(row);
     }
     this.popArray[Math.floor(this.x/2)][Math.floor(this.y/2)].pickOne();
 }
+
+
+Population.prototype.cellSize = 10;
+Population.prototype.R0 = 2;
 
 Population.prototype.vaccinate = function(ratio) {
     for (var x=0; x < this.x; x++)
@@ -190,8 +195,4 @@ Population.prototype.printOut = function() {
             row = row + this.popArray[x][y].countInfected();
         console.log(y + 1000 + ": " + row);
     }
-}
-
-function calculateProbability (R0) {
-    return infectionProbability = R0/(5 * cellSize - 1) / viableGenerations;
 }

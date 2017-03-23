@@ -1,4 +1,6 @@
 body {
+    font-family: serif;
+    font-size: 110%;
     margin: 2rem;
 }
 fieldset {
@@ -6,6 +8,9 @@ fieldset {
 }
 input, label {
     vertical-align: middle;
+}
+input {
+    padding: 0.1em 0.3em;
 }
 
 button {
@@ -17,3 +22,22 @@ button {
     margin: 1rem;
 }
 
+.fa {
+    font-size: 75%;
+}
+
+.vaccinated {
+    color: #4040FF;
+}
+
+.unvaccinated {
+    color: #DDDD20;
+}
+
+.infected {
+    color: #FF0000;
+}
+
+li {
+    list-style: none;
+}

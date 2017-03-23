@@ -68,15 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function startSimulation() {
     pauseSimulation();
-    var R0 = $r0.box.val(),
-        efficiency = $eff.box.val(),
-        size = $pop.box.val(),
-        ratio = $vrat.box.val();
-    viableGenerations = $gen.box.val();
+    var size = $pop.box.val(),
+        ratio = $vrat.box.val();    
+    Population.prototype.R0 = $r0.box.val();
+    Person.prototype.viableGenerations = $gen.box.val();
+    Person.prototype.vacEfficiency = $eff.box.val();    
     population = new Population(size);
-    calculateProbability(R0);
     population.vaccinate(ratio);
-    vacEfficiency = efficiency;
     population.drawOut();
 }
 
