@@ -1,0 +1,19 @@
+body {
+    margin: 2rem;
+}
+fieldset {
+    border: 0px;
+}
+input, label {
+    vertical-align: middle;
+}
+
+button {
+    margin: 1rem 0.2rem;
+}
+
+#the-canvas {
+    border: 3px solid red;
+    margin: 1rem;
+}
+
