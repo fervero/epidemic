@@ -5,8 +5,8 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+        <link href="https://fonts.googleapis.com/css?family=Rokkitt&amp;subset=latin-ext" rel="stylesheet">
         <link rel="stylesheet" href="css/style.css">
-        <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville&amp;subset=latin-ext" rel="stylesheet">
     </head>
 <body>
     <body>
@@ -39,13 +39,13 @@
            </fieldset>           
         </form>
         <main>
-            <div class="button-container">
+            <div class="button-container" id="simulation-buttons">
                 <button type='button' id="start">Nowa symulacja</button>
                 <button type='button' id="continue"><span class="fa fa-step-forward" aria-hidden="true" aria-label='one step forward'></span></button>
                 <button type='button' id="play"><span class="fa fa-play" aria-hidden="true" aria-label='play continuously'></span></button>  
             </div>
             <canvas id="the-canvas" width='600' height='400'></canvas>
-            <div class="button-container">
+            <div class="button-container" id='zoom-buttons'>
                 <button type='button' id='zoom-in'><span class="fa fa-search-plus" aria-hidden='true'></span></button>
                 <button type='button' id='zoom-out'><span class="fa fa-search-minus" aria-hidden='true'></span></button>                
                 <button type='button' id='full-screen'><span class="fa fa-arrows-alt" aria-hidden='true'></span></button>                
@@ -81,8 +81,7 @@
                             Cóż, mówią, że szczepionki nie chronią w stu procentach, nieprawdaż? <q>Skuteczność</q> to po prostu szansa, że infekcja, przy &ndash; poza tym &ndash; sprzyjających okolicznościach, rozbije sobie nos o układ immunologiczny potencjalnej ofiary.
                         </dd>
                     </dl>
-                    <p><b>Model:</b> teren jest podzielony na kwadraty jak szachownica, każdy kwadrat zawiera domyślnie dziesięć osób. Codziennie, każdy człowiek <q>daje buzi</q> (ma szansę zainfekować lub zostać zainfekowany) wszystkim mieszkańcom swojego kwadratu i kwadratów sąsiednich.</p>
-                    <p>
+                    <p><b>Model:</b> teren jest podzielony na kwadraty jak szachownica, każdy kwadrat zawiera domyślnie dziesięć osób. Codziennie, każdy człowiek <q>daje buzi</q> (ma szansę zainfekować lub zostać zainfekowany) wszystkim mieszkańcom swojego kwadratu i kwadratów sąsiednich.
                     Chory zaczyna roznosić infekcję następnego dnia po tym, jak został zarażony, i przestaje po zadanej z góry liczbie dni. Dopóki zaraża, zaraźliwość jest stała &mdash; obliczona na podstawie zadanych R<sub>0</sub>, rozmiaru pojedynczej komórki, i długości okresu zakaźnego.
                     </p>
                 </ul>

@@ -38,14 +38,12 @@ Person.prototype.updateGeneration = function() {
     if(this.isContagious())
         this.generation--;
 }
-
 Person.prototype.kissForward = function(anotherPerson) {
     var chance = this.infectionProbability * ( anotherPerson.isVaccinated() ? (1-this.vacEfficiency) : 1 );
     if (Math.random() < chance) {
         anotherPerson.mark();
     }
 }
-
 Person.prototype.kissBack = function(anotherPerson) {
     if (!(anotherPerson.isContagious()))
         return;
@@ -53,14 +51,12 @@ Person.prototype.kissBack = function(anotherPerson) {
     if ( Math.random() < chance)
         this.mark();
 }
-
 Person.prototype.kiss = function(anotherPerson) {
     if (!(this.isInfected()))
         this.kissBack(anotherPerson);
     else if (this.isContagious())
         this.kissForward(anotherPerson);
 }
-
 function Cell(n) {
 // to be called with constructor calls
     this.size = n;
@@ -101,7 +97,6 @@ Cell.prototype.updateGeneration = function() {
         elem.updateGeneration();
     });
 }
-
 Cell.prototype.kiss = function(args) {
     args = args || [];
     var i, j, k;
@@ -126,7 +121,6 @@ Cell.prototype.kiss = function(args) {
         }
     }
 }
-
 function Population(size) {
     this.size = size;
     var cellSize = Population.prototype.cellSize;
@@ -144,17 +138,13 @@ function Population(size) {
     }
     this.popArray[Math.floor(this.x/2)][Math.floor(this.y/2)].pickOne();
 }
-
-
 Population.prototype.cellSize = 10;
 Population.prototype.R0 = 2;
-
 Population.prototype.vaccinate = function(ratio) {
     for (var x=0; x < this.x; x++)
         for (var y=0; y < this.y; y++)
             this.popArray[x][y].vaccinate(ratio);
 }
-
 Population.prototype.processCell = function(x, y) {
     var args = [];
     if(x + 1 < this.x)
@@ -171,7 +161,6 @@ Population.prototype.update = function() {
         for (var y=0; y < this.y; y++)
             this.popArray[x][y].update();
 }
-
 Population.prototype.kiss = function() {
     for (var x=0; x < this.x; x++)
         for (var y=0; y < this.y; y++)
@@ -182,12 +171,6 @@ Population.prototype.kiss = function() {
     this.update();
     this.generation++;
 }
-
-Population.prototype.nKisses = function(n) {
-    for (var i=0; i<n; i++)
-        this.kiss();
-}
-
 Population.prototype.printOut = function() {
     var row;
     for (var y=0; y < this.y; y++) {

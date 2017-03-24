@@ -1,7 +1,7 @@
 body {
-    font-family: serif;
-    font-size: 110%;
-    margin: 2rem;
+    font-family: 'Rokkitt', serif;    
+    font-size: 120%;
+    margin: 2rem 0 0 3rem;
 }
 fieldset {
     border: 0px;
@@ -14,13 +14,22 @@ input {
 }
 
 button {
-    margin: 1rem 0.2rem;
-    padding: 0.5em 1em;
+    padding: 0.5em 1.5em;
+    margin-left: 1rem;
+}
+button:first-of-type {
+    margin-left: 0;
+}
+
+.button-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: 0;
 }
 
 #the-canvas {
     border: 3px solid red;
-    margin: 1rem;
+    margin: 0;
 }
 
 .fa-circle {
@@ -43,7 +52,7 @@ li {
     list-style: none;
 }
 
-p {
+p, dl {
     max-width: 60em;
 }
 
@@ -51,9 +60,28 @@ p {
     width: 100vw;
     height: 100vh;
 }
+.full-screen .button-container {
+    text-align: center;
+}
 .full-screen #the-canvas {
     margin-left: 10vw;
 }
+
+/*
+.full-screen .button-container {
+    position: fixed;
+}
+
+.full-screen #simulation-buttons {
+    top: 0;
+}
+
+.full-screen #zoom-buttons {
+    bottom: 0;
+}
+
+*/
+
 
 dt {
     font-size: 105%;
