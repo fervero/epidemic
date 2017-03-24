@@ -1,46 +1,46 @@
 <!doctype html>
-<html lang='en'>
+<html lang='pl'>
     <head>
         <title>Epidemia</title>
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-        <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Rokkitt&amp;subset=latin-ext" rel="stylesheet">
         <link rel="stylesheet" href="css/style.css">
     </head>
 <body>
     <body>
-    <h1>Epidemic</h1>
+    <h1>Epidemia</h1>
         <form>
            <fieldset>
-                <label for='r0field'><a href="#legend">Basic reproduction number</a> (R<sub>0</sub>): </label>
+                <label for='r0field'><a href="#legend">Podstawowa liczba odtwarzania</a> (R<sub>0</sub>): </label>
                 <input type='number' name='r0field' min='0.5' max='15' step='0.01' value = '3.2'>
                 <input type='range' name='r0range' min='0.5' max='15' step='0.1'>       
            </fieldset>
            <fieldset>
-               <label for="generations-number">Infectious period (days): </label>
+               <label for="generations-number">Okres zakaźny (w dniach): </label>
                <input type="number" name='generations-field' min='1' max='13' step='1' value='3'>
                <input type="range" name='generations-range' min='1' max='13' step='1'>
            </fieldset>           
            <fieldset>
-                <label for='population-field'>Population size: </label>
+                <label for='population-field'>Rozmiar populacji: </label>
                 <input type='number' name='population-field' min='500' max='10000' step='50' value = '2000'>
                 <input type='range' name='population-range' min='500' max='10000' step='50'>               
            </fieldset>
            <fieldset>
-               <label for='vaccination'>Vaccination ratio (%): </label>
+               <label for='vaccination'>Odsetek zaszczepionych (%): </label>
                <input type='number' name='vaccination-field' min='0' max='100' step='1' value = '50'>
                <input type='range' name='vaccination-range' min='0' max='100' step='2'>
            </fieldset>
            <fieldset>
-                <label for='efficiency-field'>Vaccine's effectiveness (%): </label>
+                <label for='efficiency-field'>Skuteczność szczepionki (%): </label>
                 <input type='number' name='efficiency-field' min='0' max='100' step='1' value = '95'>
                 <input type='range' name='efficiency-range' min='0' max='100' step='1'>               
            </fieldset>           
         </form>
         <main>
             <div class="button-container" id="simulation-buttons">
-                <button type='button' id="start">New simulation</button>
+                <button type='button' id="start">Nowa symulacja</button>
                 <button type='button' id="continue"><span class="fa fa-step-forward" aria-hidden="true" aria-label='one step forward'></span></button>
                 <button type='button' id="play"><span class="fa fa-play" aria-hidden="true" aria-label='play continuously'></span></button>  
             </div>
@@ -52,42 +52,43 @@
             </div>            
         </main>
             <legend id="legend">
-                <h2>Legend</h2>
+                <h2>Legenda</h2>
                 <ul>
                     <li>
-                        <span class="vaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Blue blot</span> - the vaccinated
+                        <span class="vaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Niebieska kropa</span> - zaszczepieni
                     </li>
                     <li>
-                        <span class="unvaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Yellow blot</span> - the unvaccinated
+                        <span class="unvaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Żółta kropa</span> - nieszczepieni
                     </li>
                     <li>
-                        <span class="infected"><span class="fa fa-circle" aria-hidden="true"></span>Red blot</span> - the infected
+                        <span class="infected"><span class="fa fa-circle" aria-hidden="true"></span>Czerwona kropa</span> - zakażeni
                     </li>
                     <dl>
-                        <dt>Basic reproduction number</dt>
-                        <dd>The number of people one person can, on average, infect during the infectious period. The higher R<sub>0</sub>, the farther and faster the infection spreads. For more, try the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number">Wikipedia</a>, for example.</dd>
-                        <dt>Infectious period</dt>
-                        <dd>Time period, within which the sick can spread the infection. I assumed that one is contagious during the first <i>n</i> days of their illness, beginning the day after getting infected. After that period, one will still be represented by a <span class="infected">red blot</span>, but won't be able to spread it any further.</dd>
+                        <dt>Podstawowa liczba odtwarzania</dt>
+                        <dd>Liczba zdrowych pacjentów, którą zakazi statystyczny chory. Więcej w <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number">Wikipedii</a>, na przykład.</dd>
+                        <dt>Okres zakaźny</dt>
+                        <dd>Czas, przez który chory ma okazję zarażać innych. Przyjąłem, że trwa on pierwsze kilka dni choroby. Po tym czasie pacjent ciągle jest reprezentowany przez <span class="infected">czerwoną kropę</span>, ale nie może już przekazać infekcji dalej.</dd>
                         <dt>
-                            Vaccination ratio
+                            Odsetek zaszczepionych
                         </dt>
                         <dd>
-                            Simply, how many people are vaccinated.
+                            Jaka część populacji została zaszczepiona przeciw tej infekcji.
                         </dd>
                         <dt>
-                            Vaccine's effectiveness
+                            Skuteczność szczepionki
                         </dt>
                         <dd>
-                            They do say that vaccines aren't one hundred percent effective, don't they? <q>Effectiveness</q> is simply a chance that an infection, all else being in its favor, will smash its nose on the intended victim's immune system.
+                            Cóż, mówią, że szczepionki nie chronią w stu procentach, nieprawdaż? <q>Skuteczność</q> to po prostu szansa, że infekcja, przy &ndash; poza tym &ndash; sprzyjających okolicznościach, rozbije sobie nos o układ immunologiczny potencjalnej ofiary.
                         </dd>
                     </dl>
-                    <p><b>The model:</b> the area is divided into square fields &mdash; think chessboard. Every field by default contains ten people. Every tick of the clock, every person <q>kisses</q> (has the opportunity to infect or be infected by) everyone living on his square and on its immediate neighbor squares. He starts spreading it the day after catching it, and continues to do so for the preset number of days. As long as he's contagious, the chance of spreading it is constant, calculated basing on the R<sub>0</sub>, the infectious period, and how many people live in a single cell.
+                    <p><b>Model:</b> teren jest podzielony na kwadraty jak szachownica, każdy kwadrat zawiera domyślnie dziesięć osób. Codziennie, każdy człowiek <q>daje buzi</q> (ma szansę zainfekować lub zostać zainfekowany) wszystkim mieszkańcom swojego kwadratu i kwadratów sąsiednich.
+                    Chory zaczyna roznosić infekcję następnego dnia po tym, jak został zarażony, i przestaje po zadanej z góry liczbie dni. Dopóki zaraża, zaraźliwość jest stała &mdash; obliczona na podstawie zadanych R<sub>0</sub>, rozmiaru pojedynczej komórki, i długości okresu zakaźnego.
                     </p>
                 </ul>
             </legend>        
         <footer>
             <h2>Disclaimer</h2>
-            <p>This <em>is</em> a toy. Or a very simplified model, and should be treated as such.</p>
+            <p>To <strong>jest</strong> zabawka. A w każdym razie bardzo uproszczony model.</p>
         </footer>
     </body>
     <script src='js/jquery.min.js'></script>

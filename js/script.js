@@ -180,7 +180,7 @@ Population.prototype.drawOut = function() {
         for (var y = 0; y < this.y; y++)
             this.popArray[x][y].draw(x, y, scaleX, scaleY);
     ctx.fillStyle = 'black';
-    ctx.fillText('Day: ' + population.generation, 30, 40);
+    ctx.fillText('Dzień: ' + population.generation, 30, 40);
 }
 function resizeCanvas(scale) {
     if(!(scale)) return;
