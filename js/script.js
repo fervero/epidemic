@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     color.vaccinated = $('.vaccinated').css('color');
     color.infected = $('.infected').css('color');
     color.unvaccinated = $('.unvaccinated').css('color');
+    color.background = '#ffffff';
     tieInputs($r0);
     tieInputs($eff);
     tieInputs($pop);
@@ -110,10 +111,10 @@ function initCanvas() {
 function startSimulation() {
     pauseSimulation();
     var size = $pop.box.val(),
-        ratio = $vrat.box.val();    
+        ratio = parseInt($vrat.box.val())/100;    
     Population.prototype.R0 = $r0.box.val();
     Person.prototype.viableGenerations = $gen.box.val();
-    Person.prototype.vacEfficiency = $eff.box.val();    
+    Person.prototype.vacEfficiency = parseInt($eff.box.val())/100;
     population = new Population(size);
     population.vaccinate(ratio);
     resetCanvas();
@@ -187,14 +188,15 @@ Cell.prototype.draw = function(x, y, xscale, yscale) {
 Population.prototype.drawOut = function() {
     var scaleX = 1 / this.x;
     var scaleY = 1 / this.y;
-    ctx.clearRect(0,0,ctxWidth,ctxHeight);
+    ctx.fillStyle = color.background;
+    ctx.fillRect(0,0,ctxWidth,ctxHeight);
     for (var x = 0; x < this.x; x++)
         for (var y = 0; y < this.y; y++)
             {
                 this.popArray[x][y].draw(x, y, scaleX, scaleY);
             }
     ctx.fillStyle = 'black';
-    ctx.fillText('Day: ' + population.generation, 30, 40);
+    ctx.fillText('Dzień: ' + population.generation, 30, 40);
 }
 
 function resizeCanvas(scale) {

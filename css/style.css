@@ -54,3 +54,8 @@ p {
 .full-screen #the-canvas {
     margin-left: 10vw;
 }
+
+dt {
+    font-size: 105%;
+    font-weight: bold;
+}
