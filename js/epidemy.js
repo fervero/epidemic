@@ -128,8 +128,9 @@ Cell.prototype.kiss = function(args) {
 }
 
 function Population(size) {
+    this.size = size;
     var cellSize = Population.prototype.cellSize;
-    console.log(Person.prototype.infectionProbability = Population.prototype.R0/(5 * Population.prototype.cellSize - 1) / Person.prototype.viableGenerations);
+    Person.prototype.infectionProbability = Population.prototype.R0/(5 * Population.prototype.cellSize - 1) / Person.prototype.viableGenerations;
     this.generation = 0;
     this.x = Math.round(Math.sqrt(size * 3 / cellSize / 2));
     this.y = Math.round(size/ this.x / cellSize);

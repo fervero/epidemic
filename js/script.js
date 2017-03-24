@@ -5,17 +5,22 @@ var $r0,
     $gen,
     $start,
     $playPause,
+    $zoomIn,
+    $zoomOut,
+    $main,
+    $fullScreen,
     population,
+    theCanvas,
     ctx,
     ctxWidth,
     ctxHeight,
+    cachedCanvasWidth,
+    cachedCanvasHeight,
+    dotRadius = 5,
     gameLoopId = 0,
     paused = true,
-    color = {
-        vaccinated: "#4040FF",
-        unvaccinated: "#DDDD20",
-        infected: "#FF0000"
-    }
+    fullScreenEvent,
+    color = {}
 
 function tieInputs(pair) {
     pair.range.val(pair.box.val());
@@ -28,6 +33,21 @@ function tieInputs(pair) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    cacheElements();
+    color.vaccinated = $('.vaccinated').css('color');
+    color.infected = $('.infected').css('color');
+    color.unvaccinated = $('.unvaccinated').css('color');
+    tieInputs($r0);
+    tieInputs($eff);
+    tieInputs($pop);
+    tieInputs($vrat);
+    tieInputs($gen);
+    initListeners();
+    initCanvas();
+    startSimulation();
+});
+
+function cacheElements() {
     $r0 = {
         box: $('input[name="r0field"]'),
         range: $('input[name="r0range"]')
@@ -50,21 +70,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     $start = $("#start");
     $continue = $("#continue");
-    $playPause = $("#play");
-    $('form').submit(function(e) {e.preventDefault(); return false;});
+    $playPause = $("#play");    
+    $zoomIn = $("#zoom-in");
+    $zoomOut = $("#zoom-out");
+    $fullScreen = $("#full-screen");
+    $main = $('main');
+}
+
+function initListeners() {
     $start.on('click', startSimulation);
     $continue.on('click', simulationStep);
-    $playPause.on('click', togglePause);
-    tieInputs($r0);
-    tieInputs($eff);
-    tieInputs($pop);
-    tieInputs($vrat);
-    tieInputs($gen);
-    ctx = document.getElementById('the-canvas').getContext('2d');
+    $playPause.on('click', togglePause);    
+    $('form').submit(function(e) {e.preventDefault(); return false;});
+    $zoomIn.on('click', zoomIn);
+    $zoomOut.on('click', zoomOut);
+    if($(document).fullScreen())
+        $fullScreen.hide();
+    $fullScreen.on('click', toggleFullScreen);
+    $(document).on('fullscreenchange', handleFullScreenChange);
+}
+
+function resetCanvas() {
     ctxWidth = ctx.canvas.clientWidth;
     ctxHeight = ctx.canvas.clientHeight;
     ctx.font = 'bold 22px sans-serif';
-});
+    if(population) {
+        dotRadius = Math.max(3, 5 * Math.sqrt(2000 / population.size) * ctxWidth / 600 );
+        population.drawOut();
+    }       
+}
+
+function initCanvas() {
+    theCanvas = document.getElementById('the-canvas');
+    ctx = theCanvas.getContext('2d');
+    theCanvas = $(theCanvas);
+    resetCanvas();
+}
 
 function startSimulation() {
     pauseSimulation();
@@ -75,7 +116,7 @@ function startSimulation() {
     Person.prototype.vacEfficiency = $eff.box.val();    
     population = new Population(size);
     population.vaccinate(ratio);
-    population.drawOut();
+    resetCanvas();
 }
 
 function simulationStep() {
@@ -89,7 +130,6 @@ function simulationLoop() {
 }
 
 function togglePause() {
-    console.log(paused);
     if(paused)
         unpauseSimulation.call(this);
     else
@@ -97,7 +137,11 @@ function togglePause() {
 }
 
 function unpauseSimulation() {
-    $playPause.html('Pause');
+    //$playPause.html('Pause');
+    $playPause.html("<span class='fa fa-pause' aria-hidden='true' aria-label='pause'></i>");
+    
+    //<i class="fa fa-pause" aria-hidden="true"></i>
+    //"<span class='fa fa-pause' aria-hidden='true' aria-label='pause'></i>"
     paused = false;
     gameLoopId = setTimeout(simulationLoop, 500);
 }
@@ -105,19 +149,21 @@ function unpauseSimulation() {
 function pauseSimulation() {
     window.clearTimeout(gameLoopId);
     paused = true;
-    $playPause.html('Go on');
+    //$playPause.html('Go on');
+    $playPause.html("<span class='fa fa-play' aria-hidden='true' aria-label='play continuously'></span>");
+    //"<span class='fa fa-play' aria-hidden='true' aria-label='play continuously'></span>"
 }
 
 function canvasDot(x, y, dotColor) {
-    var radius = 5;
     ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+    ctx.arc(x, y, dotRadius, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotColor;
     ctx.fill();
     ctx.closePath();
 }
 
 function canvasAbstractDot(x, y, color) {
+// Abstract coordinates between (0,0) and (1,1)
     var realX = x * ctxWidth,
         realY = y * ctxHeight;
     canvasDot(realX, realY, color);
@@ -134,14 +180,13 @@ Cell.prototype.draw = function(x, y, xscale, yscale) {
         if (elem.isInfected()) {
             elemColor = color.infected;
         }
-    
-        canvasDot((x + elem.x) * xscale, (y + elem.y) * yscale, elemColor);
+        canvasAbstractDot((x + elem.x) * xscale, (y + elem.y) * yscale, elemColor);
     });
 }
 
 Population.prototype.drawOut = function() {
-    var scaleX = ctxWidth / this.x;
-    var scaleY = ctxHeight / this.y;
+    var scaleX = 1 / this.x;
+    var scaleY = 1 / this.y;
     ctx.clearRect(0,0,ctxWidth,ctxHeight);
     for (var x = 0; x < this.x; x++)
         for (var y = 0; y < this.y; y++)
@@ -150,4 +195,59 @@ Population.prototype.drawOut = function() {
             }
     ctx.fillStyle = 'black';
     ctx.fillText('Day: ' + population.generation, 30, 40);
+}
+
+function resizeCanvas(scale) {
+    if(!(scale)) return;
+    var width = parseFloat(theCanvas.attr("width"));
+    var height = parseFloat(theCanvas.attr("height"));
+    theCanvas.attr("width", String(scale*width));
+    theCanvas.attr("height", String(scale*height));
+    resetCanvas();
+}
+
+function resizeCanvasTo(x, y) {
+    if((!(x)) || (!(y)))
+        return;
+    theCanvas.attr("width", String(x));
+    theCanvas.attr("height", String(y));
+    resetCanvas();
+}
+
+function zoomIn() {
+    resizeCanvas(1.1);
+}
+
+function zoomOut() {
+    resizeCanvas(0.9);
+}
+
+function handleFullScreenChange() {
+    if($(document).fullScreen())
+        handleFullScreen();
+    else
+        handleExitFullScreen();
+}
+
+function handleFullScreen() {
+    $main.addClass('full-screen');
+    cachedCanvasWidth = theCanvas.width();
+    cachedCanvasHeight = theCanvas.height();
+    var newWidth = Math.round($(window).width() * 0.8).toString(),
+        newHeight = Math.round(newWidth * 2/3).toString();
+    theCanvas.attr('width', newWidth).attr('height', newHeight);
+    resetCanvas();
+}
+
+function handleExitFullScreen() {
+    $main.removeClass('full-screen');
+    theCanvas.attr('width', cachedCanvasWidth).attr('height', cachedCanvasHeight);
+    resetCanvas();
+}
+
+function toggleFullScreen() {
+    if($(document).fullScreen())
+        $main.fullScreen(false);
+    else
+        $main.fullScreen(true);
 }

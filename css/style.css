@@ -23,7 +23,7 @@ button {
     margin: 1rem;
 }
 
-.fa {
+.fa-circle {
     font-size: 75%;
 }
 
@@ -41,4 +41,16 @@ button {
 
 li {
     list-style: none;
+}
+
+p {
+    max-width: 60em;
+}
+
+.full-screen {
+    width: 100vw;
+    height: 100vh;
+}
+.full-screen #the-canvas {
+    margin-left: 10vw;
 }

@@ -14,8 +14,8 @@
         <form>
            <fieldset>
                 <label for='r0field'>The <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number">basic reproduction number</a> (R<sub>0</sub>): </label>
-                <input type='number' name='r0field' min='0.5' max='15' step='0.01' value = '2'>
-                <input type='range' name='r0range' min='0.5' max='15' step='0.1' value = '2'>       
+                <input type='number' name='r0field' min='0.5' max='15' step='0.01' value = '3'>
+                <input type='range' name='r0range' min='0.5' max='15' step='0.1'>       
            </fieldset>
            <fieldset>
                <label for="generations-number">Infectious period (days): </label>
@@ -37,35 +37,44 @@
                 <input type='number' name='efficiency-field' min='0' max='1' step='0.01' value = '0.95'>
                 <input type='range' name='efficiency-range' min='0' max='1' step='0.01'>               
            </fieldset>           
-            <button type='button' id="start">Epidemic!</button>
-            <button type='button' id="continue">Step.</button>
-            <button type='button' id="play">Go on.</button>
         </form>
-        <canvas id="the-canvas" width='600' height='400'></canvas>
-        <legend>
-            <h2>Legend</h2>
-            <ul>
-                <li>
-                    <span class="vaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Blue dot</span> - the vaccinated
-                </li>
-                <li>
-                    <span class="unvaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Yellow dot</span> - the unvaccinated
-                </li>
-                <li>
-                    <span class="infected"><span class="fa fa-circle" aria-hidden="true"></span>Red dot</span> - the infected
-                </li>
-                <p><b>The model:</b> the field is divided into square cells (think chessboard), each containing, by default, ten people. Every day, people from every cell "kiss", or have an opportunity to infect, everyone in their own cell and everyone in the neighboring cells (up to four: above, below, left and right - so, for a white field on the chessboard, that would be the nearest black fields).</p>
-                <p>An infected person's contagious period starts the next day after being infected, and lasts exactly, invariably, the given number of days.</p>
-                <p>The model assumes that the probability of an infection is constant. It's being calculated based on the R<sub>0</sub>, the cell size and the length of infectious period. </p>
-            </ul>
-            
-        </legend>
+        <main>
+            <div class="button-container">
+                <button type='button' id="start">New simulation</button>
+                <button type='button' id="continue"><span class="fa fa-step-forward" aria-hidden="true" aria-label='one step forward'></span></button>
+                <button type='button' id="play"><span class="fa fa-play" aria-hidden="true" aria-label='play continuously'></span></button>  
+            </div>
+            <canvas id="the-canvas" width='600' height='400'></canvas>
+            <div class="button-container">
+                <button type='button' id='zoom-in'><span class="fa fa-search-plus" aria-hidden='true'></span></button>
+                <button type='button' id='zoom-out'><span class="fa fa-search-minus" aria-hidden='true'></span></button>                
+                <button type='button' id='full-screen'><span class="fa fa-arrows-alt" aria-hidden='true'></span></button>                
+            </div>            
+        </main>
+            <legend>
+                <h2>Legend</h2>
+                <ul>
+                    <li>
+                        <span class="vaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Blue dot</span> - the vaccinated
+                    </li>
+                    <li>
+                        <span class="unvaccinated"><span class="fa fa-circle" aria-hidden="true"></span>Yellow dot</span> - the unvaccinated
+                    </li>
+                    <li>
+                        <span class="infected"><span class="fa fa-circle" aria-hidden="true"></span>Red dot</span> - the infected
+                    </li>
+                    <p><b>The model:</b> the field is divided into square cells (think chessboard), each containing, by default, ten people. Every day, people from every cell "kiss", or have an opportunity to infect, everyone in their own cell and everyone in the neighboring cells (up to four: above, below, left and right - so, for a white field on the chessboard, that would be the nearest black fields).</p>
+                    <p>An infected person's contagious period starts the next day after being infected, and lasts exactly, invariably, the given number of days.</p>
+                    <p>The model assumes that the probability of an infection is constant. It's being calculated based on the R<sub>0</sub>, the cell size and the length of infectious period. </p>
+                </ul>
+            </legend>        
         <footer>
             <h2>Disclaimer</h2>
             <p>This <em>is</em> a toy. Or, in other words, a very simplified model, and you should treat is as such.</p>
         </footer>
     </body>
     <script src='js/jquery.min.js'></script>
+    <script src='js/jquery.fullscreen-min.js'></script>
     <script src = 'js/epidemy.js'></script>
     <script src = 'js/script.js'></script>
 
