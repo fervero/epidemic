@@ -31,7 +31,10 @@ var $r0,
     gameLoopId = 0,
     paused = true,
     fullScreenEvent,
-    color = {}
+    color = {
+        text: '#000000',
+        background: '#ffffff'
+    }
 
 function tieInputs(pair) {
     pair.range.val(pair.box.val());
@@ -48,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
     color.vaccinated = $('.vaccinated').css('color');
     color.infected = $('.infected').css('color');
     color.unvaccinated = $('.unvaccinated').css('color');
-    color.background = '#ffffff';
     tieInputs($r0);
     tieInputs($eff);
     tieInputs($pop);
@@ -106,7 +108,7 @@ function initListeners() {
 function resetCanvas() {
     ctxWidth = ctx.canvas.clientWidth;
     ctxHeight = ctx.canvas.clientHeight;
-    ctx.font = 'bold 22px sans-serif';
+    ctx.font = 'bold 32px sans-serif';
     if(population) {
         dotRadius = Math.max(3, 5 * Math.sqrt(2000 / population.size) * ctxWidth / 600 );
         population.drawOut();
@@ -194,8 +196,15 @@ Population.prototype.drawOut = function() {
     for (var x = 0; x < this.x; x++)
         for (var y = 0; y < this.y; y++)
             this.popArray[x][y].draw(x, y, scaleX, scaleY);
-    ctx.fillStyle = 'black';
+    ctx.strokeStyle = color.background;
+    ctx.lineWidth = 6;
+    ctx.strokeText((day[lang] || '') + ': ' + population.generation, 30, 40);
+    ctx.strokeStyle = color.text;
+    ctx.lineWidth = 4;
+    ctx.strokeText((day[lang] || '') + ': ' + population.generation, 30, 40);
+    ctx.fillStyle = color.background;
     ctx.fillText((day[lang] || '') + ': ' + population.generation, 30, 40);
+    
 }
 function resizeCanvas(scale) {
     if(!(scale)) return;
