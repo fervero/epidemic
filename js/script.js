@@ -8,6 +8,7 @@ var $r0,
     $gen,
     $start,
     $playPause,
+    $plusOne,
     $zoomIn,
     $zoomOut,
     $simButtons,
@@ -80,7 +81,8 @@ function cacheElements() {
     }
     $start = $("#start");
     $continue = $("#continue");
-    $playPause = $("#play");    
+    $playPause = $("#play");
+    $plusOne = $("#plus-one");
     $zoomIn = $("#zoom-in");
     $zoomOut = $("#zoom-out");
     $fullScreen = $("#full-screen");
@@ -92,7 +94,8 @@ function initListeners() {
     $start.on('click', startSimulation);
     $continue.on('click', simulationStep);
     $playPause.on('click', togglePause);    
-    $('form').submit(function(e) {e.preventDefault(); return false;});
+    $plusOne.on('click', addInfected);
+    $('form').submit(function(e) {e.preventDefault();});
     $zoomIn.on('click', zoomIn);
     $zoomOut.on('click', zoomOut);
     if($(document).fullScreen())
@@ -125,6 +128,12 @@ function startSimulation() {
     population = new Population(size);
     population.vaccinate(ratio);
     resetCanvas();
+}
+function addInfected() {
+    if(population) {
+        population.pickN(1);
+        population.drawOut();
+    }
 }
 function simulationStep() {
     population.kiss();
@@ -186,7 +195,7 @@ Population.prototype.drawOut = function() {
         for (var y = 0; y < this.y; y++)
             this.popArray[x][y].draw(x, y, scaleX, scaleY);
     ctx.fillStyle = 'black';
-    ctx.fillText(day[lang] + ': ' + population.generation, 30, 40);
+    ctx.fillText((day[lang] || '') + ': ' + population.generation, 30, 40);
 }
 function resizeCanvas(scale) {
     if(!(scale)) return;

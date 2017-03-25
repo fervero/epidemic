@@ -3,7 +3,7 @@
     <head>
         <title>Epidemia</title>
         <meta charset='utf-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
         <link href="https://fonts.googleapis.com/css?family=Rokkitt&amp;subset=latin-ext" rel="stylesheet">
         <link rel="stylesheet" href="css/style.css">
@@ -12,46 +12,57 @@
     <body>
     <header>
         <h1>Epidemia</h1>
-        <p lang='en'>For the English version, click <a href="index-en.html">here</a>.</p>
+        <p lang='en'><i>For the English version, click <a href="index-en.html">here</a>.</i></p>
    </header>
-        <form>
+        <form id="control-set">
            <fieldset>
                 <label for='r0field'><a href="#legend">Podstawowa liczba odtwarzania</a> (R<sub>0</sub>): </label>
-                <input type='number' name='r0field' min='0.5' max='15' step='0.01' value = '3.2'>
-                <input type='range' name='r0range' min='0.5' max='15' step='0.1'>       
+                <span class='no-break'>
+                    <input type='number' name='r0field' min='0.5' max='15' step='0.01' value = '3.2' class='long-number'>
+                    <input type='range' name='r0range' min='0.5' max='15' step='0.1'>
+                </span>
            </fieldset>
            <fieldset>
                <label for="generations-number">Okres zakaźny (w dniach): </label>
-               <input type="number" name='generations-field' min='1' max='13' step='1' value='3'>
-               <input type="range" name='generations-range' min='1' max='13' step='1'>
+                <span class='no-break'>
+                   <input type="number" name='generations-field' min='1' max='13' step='1' value='3' class='short-number'>
+                   <input type="range" name='generations-range' min='1' max='13' step='1'>
+               </span>
            </fieldset>           
            <fieldset>
                 <label for='population-field'>Rozmiar populacji: </label>
-                <input type='number' name='population-field' min='500' max='10000' step='50' value = '2000'>
-                <input type='range' name='population-range' min='500' max='10000' step='50'>               
+                <span class='no-break'>
+                    <input type='number' name='population-field' min='500' max='10000' step='50' value = '2000' class='long-number'>
+                    <input type='range' name='population-range' min='500' max='10000' step='50'>
+               </span>
            </fieldset>
            <fieldset>
-               <label for='vaccination'>Odsetek zaszczepionych (%): </label>
-               <input type='number' name='vaccination-field' min='0' max='100' step='1' value = '50'>
-               <input type='range' name='vaccination-range' min='0' max='100' step='2'>
+                <label for='vaccination'>Odsetek zaszczepionych (%): </label>
+                <span class='no-break'>           
+                   <input type='number' name='vaccination-field' min='0' max='100' step='1' value = '50' class='short-number'>
+                   <input type='range' name='vaccination-range' min='0' max='100' step='2'>
+                </span>
            </fieldset>
            <fieldset>
                 <label for='efficiency-field'>Skuteczność szczepionki (%): </label>
-                <input type='number' name='efficiency-field' min='0' max='100' step='1' value = '95'>
-                <input type='range' name='efficiency-range' min='0' max='100' step='1'>               
+                    <span class='no-break'>
+                        <input type='number' name='efficiency-field' min='0' max='100' step='1' value = '95' class='short-number'>
+                        <input type='range' name='efficiency-range' min='0' max='100' step='1'>
+               </span>
            </fieldset>           
         </form>
         <main>
             <div class="button-container" id="simulation-buttons">
-                <button type='button' id="start">Nowa symulacja</button>
-                <button type='button' id="continue"><span class="fa fa-step-forward" aria-hidden="true" aria-label='jeden krok symulacji'></span></button>
-                <button type='button' id="play"><span class="fa fa-play" aria-hidden="true" aria-label='symulacja ciągła'></span></button>  
+                <button type='submit' id="start" form="control-set">Nowa symulacja</button>
+                <button type='button' id='plus-one' title='dodaj zainfekowanego'><span class="fa fa-plus" aria-hidden="true" aria-label='dodaj zainfekowanego'></span></button>
+                <button type='button' id="continue" title='jeden krok symulacji'><span class="fa fa-step-forward" aria-hidden="true" aria-label='jeden krok symulacji'></span></button>
+                <button type='button' id="play" title='symulacja ciągła'><span class="fa fa-play" aria-hidden="true" aria-label='symulacja ciągła'></span></button>
             </div>
-            <canvas id="the-canvas" width='600' height='400'></canvas>
+            <canvas id="the-canvas" width="600px" height="400px"></canvas>
             <div class="button-container" id='zoom-buttons'>
-                <button type='button' id='zoom-in'><span class="fa fa-search-plus" aria-hidden='true' aria-label='powiększ'></span></button>
-                <button type='button' id='zoom-out'><span class="fa fa-search-minus" aria-hidden='true' aria-label='pomniejsz'></span></button>                
-                <button type='button' id='full-screen'><span class="fa fa-arrows-alt" aria-hidden='true' aria-label='pełny ekran'></span></button>                
+                <button type='button' id='zoom-in' title='powiększ'><span class="fa fa-search-plus" aria-hidden='true' aria-label='powiększ'></span></button>
+                <button type='button' id='zoom-out' title='pomniejsz'><span class="fa fa-search-minus" aria-hidden='true' aria-label='pomniejsz'></span></button>                
+                <button type='button' id='full-screen' title='pełny ekran'><span class="fa fa-arrows-alt" aria-hidden='true' aria-label='pełny ekran'></span></button>                
             </div>
         </main>
             <legend id="legend">

@@ -1,10 +1,6 @@
 body {
     font-family: 'Rokkitt', serif;    
-    font-size: 120%;
-    margin: 2rem 0 0 3rem;
-}
-fieldset {
-    border: 0px;
+    margin: 1rem;
 }
 input, label {
     vertical-align: middle;
@@ -25,6 +21,10 @@ button:first-of-type {
     padding-top: 1rem;
     padding-bottom: 1rem;
     margin: 0;
+}
+
+fieldset {
+    border-width: 0px;
 }
 
 #the-canvas {
@@ -53,7 +53,7 @@ li {
 }
 
 p, dl {
-    max-width: 60em;
+    max-width: 60rem;
 }
 
 .full-screen {
@@ -67,23 +67,39 @@ p, dl {
     margin-left: 10vw;
 }
 
-/*
-.full-screen .button-container {
-    position: fixed;
-}
-
-.full-screen #simulation-buttons {
-    top: 0;
-}
-
-.full-screen #zoom-buttons {
-    bottom: 0;
-}
-
-*/
-
-
 dt {
     font-size: 105%;
     font-weight: bold;
+}
+
+.short-number {
+    width: 2.5em;
+}
+.short-number + input {
+    width: 12em;
+}
+.long-number + input {
+    width: 10.5em;
+}
+
+.long-number {
+    width: 4em;
+}
+label {
+    width: 16em;
+    display: inline-block;
+}
+
+.no-break {
+    display: inline-block;
+}
+
+#plus-one {
+    font-weight: bold;
+}
+
+@media (min-width: 801px) {
+    html {
+         margin: 2rem 0 0 3rem;
+    }
 }

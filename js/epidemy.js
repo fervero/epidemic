@@ -140,6 +140,14 @@ function Population(size) {
 }
 Population.prototype.cellSize = 10;
 Population.prototype.R0 = 2;
+Population.prototype.pickN = function(n) {
+    var i, x, y;
+    for (var i=0; i<n; i++) {
+        x = Math.floor(Math.random() * this.x);
+        y = Math.floor(Math.random() * this.y);
+        this.popArray[x][y].pickOne();
+    }
+}
 Population.prototype.vaccinate = function(ratio) {
     for (var x=0; x < this.x; x++)
         for (var y=0; y < this.y; y++)
