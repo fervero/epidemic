@@ -10,7 +10,10 @@
     </head>
 <body>
     <body>
-    <h1>Epidemia</h1>
+    <header>
+        <h1>Epidemia</h1>
+        <p lang='en'>For the English version, click <a href="index-en.html">here</a>.</p>
+   </header>
         <form>
            <fieldset>
                 <label for='r0field'><a href="#legend">Podstawowa liczba odtwarzania</a> (R<sub>0</sub>): </label>
@@ -41,15 +44,15 @@
         <main>
             <div class="button-container" id="simulation-buttons">
                 <button type='button' id="start">Nowa symulacja</button>
-                <button type='button' id="continue"><span class="fa fa-step-forward" aria-hidden="true" aria-label='one step forward'></span></button>
-                <button type='button' id="play"><span class="fa fa-play" aria-hidden="true" aria-label='play continuously'></span></button>  
+                <button type='button' id="continue"><span class="fa fa-step-forward" aria-hidden="true" aria-label='jeden krok symulacji'></span></button>
+                <button type='button' id="play"><span class="fa fa-play" aria-hidden="true" aria-label='symulacja ciągła'></span></button>  
             </div>
             <canvas id="the-canvas" width='600' height='400'></canvas>
             <div class="button-container" id='zoom-buttons'>
-                <button type='button' id='zoom-in'><span class="fa fa-search-plus" aria-hidden='true'></span></button>
-                <button type='button' id='zoom-out'><span class="fa fa-search-minus" aria-hidden='true'></span></button>                
-                <button type='button' id='full-screen'><span class="fa fa-arrows-alt" aria-hidden='true'></span></button>                
-            </div>            
+                <button type='button' id='zoom-in'><span class="fa fa-search-plus" aria-hidden='true' aria-label='powiększ'></span></button>
+                <button type='button' id='zoom-out'><span class="fa fa-search-minus" aria-hidden='true' aria-label='pomniejsz'></span></button>                
+                <button type='button' id='full-screen'><span class="fa fa-arrows-alt" aria-hidden='true' aria-label='pełny ekran'></span></button>                
+            </div>
         </main>
             <legend id="legend">
                 <h2>Legenda</h2>
@@ -95,5 +98,4 @@
     <script src='js/jquery.fullscreen-min.js'></script>
     <script src = 'js/epidemy.js'></script>
     <script src = 'js/script.js'></script>
-
 </html>

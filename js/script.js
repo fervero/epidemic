@@ -17,6 +17,11 @@ var $r0,
     population,
     theCanvas,
     ctx,
+    lang,
+    day = {
+        pl: 'Dzień',
+        en: 'Day'
+    },
     ctxWidth,
     ctxHeight,
     cachedCanvasWidth,
@@ -37,6 +42,7 @@ function tieInputs(pair) {
     });
 }
 document.addEventListener('DOMContentLoaded', function() {
+    lang = document.documentElement.lang;
     cacheElements();
     color.vaccinated = $('.vaccinated').css('color');
     color.infected = $('.infected').css('color');
@@ -180,7 +186,7 @@ Population.prototype.drawOut = function() {
         for (var y = 0; y < this.y; y++)
             this.popArray[x][y].draw(x, y, scaleX, scaleY);
     ctx.fillStyle = 'black';
-    ctx.fillText('Dzień: ' + population.generation, 30, 40);
+    ctx.fillText(day[lang] + ': ' + population.generation, 30, 40);
 }
 function resizeCanvas(scale) {
     if(!(scale)) return;
@@ -214,8 +220,8 @@ function handleFullScreen() {
     cachedCanvasWidth = theCanvas.width();
     cachedCanvasHeight = theCanvas.height();
     var newWidth = Math.round($(window).width() * 0.8).toString(),
-        vertSpace = ($(window).height() - $simButtons.height() - $zoomButtons.height()),
-        newHeight = (Math.min(Math.round(newWidth * 2/3), vertSpace)).toString();
+        vertSpace = ($(window).height() - $simButtons.outerHeight() - $zoomButtons.outerHeight()),
+        newHeight = vertSpace.toString();
     console.log(vertSpace);
     theCanvas.attr('width', newWidth).attr('height', newHeight);
     resetCanvas();
