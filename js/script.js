@@ -1,4 +1,4 @@
-(function() {
+//(function() {
     
 
 var $r0,
@@ -31,6 +31,10 @@ var $r0,
     gameLoopId = 0,
     paused = true,
     fullScreenEvent,
+    Infection = Epidemic.newInstance(),
+    Population = Infection.protoPopulation,
+    Person = Infection.protoPerson,
+    Cell = Infection.protoCell,
     color = {
         text: '#000000',
         background: '#ffffff'
@@ -123,11 +127,11 @@ function initCanvas() {
 function startSimulation() {
     pauseSimulation();
     var size = $pop.box.val(),
-        ratio = parseInt($vrat.box.val())/100;    
-    Population.prototype.R0 = $r0.box.val();
-    Person.prototype.viableGenerations = $gen.box.val();
-    Person.prototype.vacEfficiency = parseInt($eff.box.val())/100;
-    population = new Population(size);
+        ratio = parseInt($vrat.box.val())/100;
+    Infection.config.R0 = $r0.box.val();
+    Infection.config.viableGenerations = $gen.box.val();
+    Infection.config.vacEfficiency = parseInt($eff.box.val())/100;
+    population = Infection.getNewPopulation(size);
     population.vaccinate(ratio);
     resetCanvas();
 }
@@ -173,8 +177,9 @@ function canvasAbstractDot(x, y, color) {
     var realX = x * ctxWidth,
         realY = y * ctxHeight;
     canvasDot(realX, realY, color);
+//    console.log('x: ' + realX + ', y: ' + realY + ', color: ' + color);
 }
-Cell.prototype.draw = function(x, y, xscale, yscale) {
+Infection.protoCell.draw = function(x, y, xscale, yscale) {
     this.popArray.forEach(function(elem) {
         var elemColor;
         if (elem.isVaccinated()) {
@@ -186,25 +191,25 @@ Cell.prototype.draw = function(x, y, xscale, yscale) {
             elemColor = color.infected;
         }
         canvasAbstractDot((x + elem.x) * xscale, (y + elem.y) * yscale, elemColor);
+        //console.log('x: ' + (x + elem.x)*xscale.toString() + ', y: ' + ((y + elem.y) * yscale).toString() + ', color: ' + elemColor);
     });
 }
-Population.prototype.drawOut = function() {
-    var scaleX = 1 / this.x;
-    var scaleY = 1 / this.y;
+Infection.protoPopulation.drawOut = function() {
+    var scaleX = 1 / this.columns;
+    var scaleY = 1 / this.rows;
     ctx.fillStyle = color.background;
     ctx.fillRect(0,0,ctxWidth,ctxHeight);
-    for (var x = 0; x < this.x; x++)
-        for (var y = 0; y < this.y; y++)
+    for (var x = 0; x < this.columns; x++)
+        for (var y = 0; y < this.rows; y++)
             this.popArray[x][y].draw(x, y, scaleX, scaleY);
     ctx.strokeStyle = color.background;
     ctx.lineWidth = 6;
-    ctx.strokeText((day[lang] || '') + ': ' + population.generation, 30, 40);
+    ctx.strokeText((day[lang] || '') + ': ' + population.days, 30, 40);
     ctx.strokeStyle = color.text;
     ctx.lineWidth = 4;
-    ctx.strokeText((day[lang] || '') + ': ' + population.generation, 30, 40);
+    ctx.strokeText((day[lang] || '') + ': ' + population.days, 30, 40);
     ctx.fillStyle = color.background;
-    ctx.fillText((day[lang] || '') + ': ' + population.generation, 30, 40);
-    
+    ctx.fillText((day[lang] || '') + ': ' + population.days, 30, 40);
 }
 function resizeCanvas(scale) {
     if(!(scale)) return;
@@ -240,7 +245,7 @@ function handleFullScreen() {
     var newWidth = Math.round($(window).width() * 0.8).toString(),
         vertSpace = ($(window).height() - $simButtons.outerHeight() - $zoomButtons.outerHeight()),
         newHeight = vertSpace.toString();
-    console.log(vertSpace);
+    //console.log(vertSpace);
     theCanvas.attr('width', newWidth).attr('height', newHeight);
     resetCanvas();
 }
@@ -256,4 +261,4 @@ function toggleFullScreen() {
         $main.fullScreen(true);
 }
     
-})();
+//})();
