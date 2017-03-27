@@ -37,12 +37,16 @@ var Epidemic = {
         return Infection;
     },
     configure: function(newConfig) {
+// Without jQuery, comment out the line below and use Object.assign instead.        
         $.extend(this.config, newConfig);
+// Object.assign(this.config, newConfig);
         if(Object.keys(newConfig).includes('R0'))
             this.config.infectionProbability = this.config.R0/(5 * this.config.cellSize - 1) / this.config.infectiousDays;
     },
     resetToDefault: function() {
+// Without jQuery, comment out the line below and use Object.assign instead.        
         $.extend(this.config, this.default);
+// Object.assign(this.config, this.default);
     },
     setContext: function(ctx) {
         if(ctx)

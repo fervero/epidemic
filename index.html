@@ -57,6 +57,10 @@
                 <button type='button' id='plus-one' title='dodaj zainfekowanego'><span class="fa fa-plus" aria-hidden="true" aria-label='dodaj zainfekowanego'></span></button>
                 <button type='button' id="continue" title='jeden krok symulacji'><span class="fa fa-step-forward" aria-hidden="true" aria-label='jeden krok symulacji'></span></button>
                 <button type='button' id="play" title='symulacja ciągła'><span class="fa fa-play" aria-hidden="true" aria-label='symulacja ciągła'></span></button>
+                <span class="no-break">
+                    <label for="speed">Szybkość: </label>
+                    <input type="range" name='speed' id='speed' min='0' max='975' step = '25'>                    
+                </span>
             </div>
             <canvas id="the-canvas" width="600px" height="400px"></canvas>
             <div class="button-container" id='zoom-buttons'>

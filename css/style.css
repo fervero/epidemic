@@ -85,9 +85,12 @@ dt {
 .long-number {
     width: 4em;
 }
-label {
+#control-set label {
     width: 16em;
     display: inline-block;
+}
+.button-container label {
+    margin: auto 0.5em auto 1em;
 }
 
 .no-break {

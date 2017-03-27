@@ -13,6 +13,7 @@
         $zoomButtons,
         $main,
         $fullScreen,
+        $speed,
         population,
         theCanvas,
         ctx,
@@ -94,6 +95,7 @@
         $simButtons = $("#simulation-buttons");
         $zoomButtons = $("#zoom-buttons");
         $main = $('main');
+        $speed = $("#speed");
     }
     function initListeners() {
         $start.on('click', startSimulation);
@@ -154,7 +156,9 @@
     }
     function simulationLoop() {
         simulationStep();
-        gameLoopId = setTimeout(simulationLoop, 500);
+        var speed = 1000 - parseInt($speed.val());
+        //gameLoopId = setTimeout(simulationLoop, 500);
+        gameLoopId = setTimeout(simulationLoop, speed);
     }
     function togglePause() {
         if(paused)
