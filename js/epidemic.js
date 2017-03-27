@@ -11,7 +11,15 @@ var Epidemic = {
         viableGenerations: 1,
         cellSize: 10,
         R0: 2,
-        infectionProbability: 1
+        infectionProbability: 1,
+        colorBackground: 'white',
+        colorFont: 'black',
+        colorInfected: 'red',
+        colorVaccinated: 'blue',
+        colorUnvaccinated: 'yellow',
+        ctxWidth: 200,
+        ctxHeight: 200,
+        dotRadius: 5
     },
     protoPopulation: {},
     protoCell: {},
@@ -23,8 +31,20 @@ var Epidemic = {
     },
     newInstance: function() {
         var Infection = Object.create(this);
+        Infection.config = Object.create(this.config);
         Infection.init();
         return Infection;
+    },
+    configure: function(newConfig) {
+        $.extend(this.config, newConfig);
+    },
+    resetToDefault: function() {
+        $.extend(this.config, this.default);
+    },
+    setContext: function(ctx) {
+        this.config.ctx = ctx;
+        this.config.ctxWidth = ctx.canvas.clientWidth;
+        this.config.ctxHeight = ctx.canvas.clientHeight;
     }
 }
 Epidemic.protoPerson.init = function() {
@@ -68,7 +88,7 @@ Epidemic.protoPerson.updateGeneration = function() {
         this.generation--;
 }
 Epidemic.protoPerson.kissForward = function(anotherPerson) {
-    var chance = this.config.infectionProbability * ( anotherPerson.isVaccinated() ? (1-this.vacEfficiency) : 1 );
+    var chance = this.config.infectionProbability * ( anotherPerson.isVaccinated() ? (1-this.config.vacEfficiency) : 1 );
     if (Math.random() < chance) {
         anotherPerson.mark();
     }
@@ -76,7 +96,7 @@ Epidemic.protoPerson.kissForward = function(anotherPerson) {
 Epidemic.protoPerson.kissBack = function(anotherPerson) {
     if (!(anotherPerson.isContagious()))
         return;
-    var chance = this.config.infectionProbability * ( this.isVaccinated() ? (1-this.vacEfficiency) : 1 );
+    var chance = this.config.infectionProbability * ( this.isVaccinated() ? (1-this.config.vacEfficiency) : 1 );
     if ( Math.random() < chance)
         this.mark();
 }
@@ -223,4 +243,49 @@ Epidemic.protoPopulation.printOut = function() {
             row = row + this.popArray[x][y].countInfected();
         console.log(y + 1000 + ": " + row);
     }
+}
+
+Epidemic.protoCell.canvasDot = function(x, y, dotColor) {
+    var ctx = this.config.ctx;
+    ctx.beginPath();
+    ctx.arc(x, y, this.config.dotRadius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = dotColor;
+    ctx.fill();
+    ctx.closePath();
+}
+Epidemic.protoCell.canvasAbstractDot = function(x, y, color) {
+// Abstract coordinates between (0,0) and (1,1)
+    var realX = x * this.config.ctxWidth,
+        realY = y * this.config.ctxHeight;
+    this.canvasDot(realX, realY, color);
+}
+Epidemic.protoCell.draw = function(x, y, xscale, yscale) {
+    var colorVaccinated = this.config.colorVaccinated,
+        colorInfected = this.config.colorInfected,
+        colorUnvaccinated = this.config.colorUnvaccinated,
+        canvasAbstractDot = this.canvasAbstractDot.bind(this);
+    this.popArray.forEach(function(elem) {
+        var elemColor;
+        if (elem.isVaccinated()) {
+            elemColor = colorVaccinated;
+        } else {
+            elemColor = colorUnvaccinated;
+        };
+        if (elem.isInfected()) {
+            elemColor = colorInfected;
+        }
+        canvasAbstractDot((x + elem.x) * xscale, (y + elem.y) * yscale, elemColor);
+    });
+}
+Epidemic.protoPopulation.drawOut = function() {
+    var scaleX = 1 / this.columns,
+        scaleY = 1 / this.rows,
+        ctx = this.config.ctx,
+        ctxHeight = this.config.ctxHeight,
+        ctxWidth = this.config.ctxWidth;
+    ctx.fillStyle = this.config.colorBackground;
+    ctx.fillRect(0,0,ctxWidth,ctxHeight);
+    for (var x = 0; x < this.columns; x++)
+        for (var y = 0; y < this.rows; y++)
+            this.popArray[x][y].draw(x, y, scaleX, scaleY);
 }

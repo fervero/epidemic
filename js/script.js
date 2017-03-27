@@ -1,4 +1,4 @@
-//(function() {
+(function() {
     
 
 var $r0,
@@ -27,14 +27,10 @@ var $r0,
     ctxHeight,
     cachedCanvasWidth,
     cachedCanvasHeight,
-    dotRadius = 5,
     gameLoopId = 0,
     paused = true,
     fullScreenEvent,
     Infection = Epidemic.newInstance(),
-    Population = Infection.protoPopulation,
-    Person = Infection.protoPerson,
-    Cell = Infection.protoCell,
     color = {
         text: '#000000',
         background: '#ffffff'
@@ -52,9 +48,18 @@ function tieInputs(pair) {
 document.addEventListener('DOMContentLoaded', function() {
     lang = document.documentElement.lang;
     cacheElements();
+    Epidemic.configure({
+        colorVaccinated: $('.vaccinated').css('color'),
+        colorInfected: $('.infected').css('color'),
+        colorUnvaccinated: $('.unvaccinated').css('color'),
+        colorBackground: '#ffffff',
+        colorText: '#000000'
+    });
+/*
     color.vaccinated = $('.vaccinated').css('color');
     color.infected = $('.infected').css('color');
     color.unvaccinated = $('.unvaccinated').css('color');
+*/
     tieInputs($r0);
     tieInputs($eff);
     tieInputs($pop);
@@ -110,12 +115,16 @@ function initListeners() {
     $(document).on('fullscreenchange', handleFullScreenChange);
 }
 function resetCanvas() {
-    ctxWidth = ctx.canvas.clientWidth;
-    ctxHeight = ctx.canvas.clientHeight;
+    Infection.configure({
+        ctx: ctx,
+        ctxWidth: ctxWidth = ctx.canvas.clientWidth,
+        ctxHeight: ctxHeight = ctx.canvas.clientHeight
+    });
     ctx.font = 'bold 32px sans-serif';
     if(population) {
-        dotRadius = Math.max(3, 5 * Math.sqrt(2000 / population.size) * ctxWidth / 600 );
+        Infection.config.dotRadius = Math.max(3, 5 * Math.sqrt(2000 / population.size) * ctxWidth / 600 );
         population.drawOut();
+        drawDay();
     }       
 }
 function initCanvas() {
@@ -128,9 +137,11 @@ function startSimulation() {
     pauseSimulation();
     var size = $pop.box.val(),
         ratio = parseInt($vrat.box.val())/100;
-    Infection.config.R0 = $r0.box.val();
-    Infection.config.viableGenerations = $gen.box.val();
-    Infection.config.vacEfficiency = parseInt($eff.box.val())/100;
+    Infection.configure({
+        R0: $r0.box.val(),
+        viableGenerations: $gen.box.val(),
+        vacEfficiency: parseInt($eff.box.val())/100
+    });
     population = Infection.getNewPopulation(size);
     population.vaccinate(ratio);
     resetCanvas();
@@ -139,11 +150,13 @@ function addInfected() {
     if(population) {
         population.pickN(1);
         population.drawOut();
+        drawDay();
     }
 }
 function simulationStep() {
     population.kiss();
     population.drawOut();
+    drawDay();
 }
 function simulationLoop() {
     simulationStep();
@@ -165,51 +178,15 @@ function pauseSimulation() {
     paused = true;
     $playPause.html("<span class='fa fa-play' aria-hidden='true' aria-label='play continuously'></span>");
 }
-function canvasDot(x, y, dotColor) {
-    ctx.beginPath();
-    ctx.arc(x, y, dotRadius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = dotColor;
-    ctx.fill();
-    ctx.closePath();
-}
-function canvasAbstractDot(x, y, color) {
-// Abstract coordinates between (0,0) and (1,1)
-    var realX = x * ctxWidth,
-        realY = y * ctxHeight;
-    canvasDot(realX, realY, color);
-//    console.log('x: ' + realX + ', y: ' + realY + ', color: ' + color);
-}
-Infection.protoCell.draw = function(x, y, xscale, yscale) {
-    this.popArray.forEach(function(elem) {
-        var elemColor;
-        if (elem.isVaccinated()) {
-            elemColor = color.vaccinated;
-        } else {
-            elemColor = color.unvaccinated;
-        };
-        if (elem.isInfected()) {
-            elemColor = color.infected;
-        }
-        canvasAbstractDot((x + elem.x) * xscale, (y + elem.y) * yscale, elemColor);
-        //console.log('x: ' + (x + elem.x)*xscale.toString() + ', y: ' + ((y + elem.y) * yscale).toString() + ', color: ' + elemColor);
-    });
-}
-Infection.protoPopulation.drawOut = function() {
-    var scaleX = 1 / this.columns;
-    var scaleY = 1 / this.rows;
-    ctx.fillStyle = color.background;
-    ctx.fillRect(0,0,ctxWidth,ctxHeight);
-    for (var x = 0; x < this.columns; x++)
-        for (var y = 0; y < this.rows; y++)
-            this.popArray[x][y].draw(x, y, scaleX, scaleY);
-    ctx.strokeStyle = color.background;
+function drawDay() {
+    ctx.strokeStyle = Infection.config.colorBackground;
     ctx.lineWidth = 6;
     ctx.strokeText((day[lang] || '') + ': ' + population.days, 30, 40);
-    ctx.strokeStyle = color.text;
+    ctx.strokeStyle = Infection.config.colorText;
     ctx.lineWidth = 4;
     ctx.strokeText((day[lang] || '') + ': ' + population.days, 30, 40);
-    ctx.fillStyle = color.background;
-    ctx.fillText((day[lang] || '') + ': ' + population.days, 30, 40);
+    ctx.fillStyle = Infection.config.colorBackground;
+    ctx.fillText((day[lang] || '') + ': ' + population.days, 30, 40);    
 }
 function resizeCanvas(scale) {
     if(!(scale)) return;
@@ -245,7 +222,6 @@ function handleFullScreen() {
     var newWidth = Math.round($(window).width() * 0.8).toString(),
         vertSpace = ($(window).height() - $simButtons.outerHeight() - $zoomButtons.outerHeight()),
         newHeight = vertSpace.toString();
-    //console.log(vertSpace);
     theCanvas.attr('width', newWidth).attr('height', newHeight);
     resetCanvas();
 }
@@ -261,4 +237,4 @@ function toggleFullScreen() {
         $main.fullScreen(true);
 }
     
-//})();
+})();
