@@ -73,10 +73,10 @@ dt {
 }
 
 .short-number {
-    width: 2.5em;
+    width: 2.7em;
 }
 .short-number + input {
-    width: 12em;
+    width: 11.8em;
 }
 .long-number + input {
     width: 10.5em;
