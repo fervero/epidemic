@@ -4,7 +4,7 @@ A simulator of an epidemic spreading through population.
 ## The basics
 1. Link the epidemic.js file in your project. Create a new model. Within it, create a new population. Pass a 2d context to it, so it has a place to put them colored blots. Draw. Minimal code looks like this:
 ```
-var model = Epidemy.newInstance(),
+var model = Epidemic.newInstance(),
     population = model.getNewPopulation();
 model.setContext(document.querySelector('canvas').getContext('2d'));
 population.draw();
@@ -15,8 +15,8 @@ population.kiss();
 ```
 3. To have multiple simulations going at once in the same window, just create more models:
 ```
-var model1 = Epidemy.newInstance(),
-    model2 = Epidemy.newInstance(),
+var model1 = Epidemic.newInstance(),
+    model2 = Epidemic.newInstance(),
     pop1 = model1.getNewPopulation(),
     pop2 = model2.getNewPopulation();
 model1.setContext(ctx1);
