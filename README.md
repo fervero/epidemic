@@ -2,7 +2,7 @@
 A simulator of an epidemic spreading through population.
 
 ## The basics
-1. Create a new model. Within it, create a new population. Pass a 2d context to it, so it has a place to put them colored blots. Draw. Minimal code looks like this:
+1. Link the epidemic.js file in your project. Create a new model. Within it, create a new population. Pass a 2d context to it, so it has a place to put them colored blots. Draw. Minimal code looks like this:
 ```
 var model = Epidemy.newInstance(),
     population = model.getNewPopulation();
@@ -32,3 +32,4 @@ model.configure({
 });
 ```
 Look at the ```Epidemic.default``` object to see the names of all parameters.
+To be on the safe side, do the configuring <i>before</i> creating a population. Also, it's a good idea to call the ```setContext()``` method some time between creating the population, and trying to draw a single point on the canvas.
