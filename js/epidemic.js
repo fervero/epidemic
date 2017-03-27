@@ -1,14 +1,10 @@
 var Epidemic = {
     config: {
-        vacEfficiency: 1,
-        viableGenerations: 1,
-        cellSize: 10,
-        R0: 2,
-        infectionProbability: 1
     },
     default: {
         vacEfficiency: 1,
-        viableGenerations: 1,
+        vaccinationRatio: 0,
+        infectiousDays: 1,
         cellSize: 10,
         R0: 2,
         infectionProbability: 1,
@@ -19,32 +15,43 @@ var Epidemic = {
         colorUnvaccinated: 'yellow',
         ctxWidth: 200,
         ctxHeight: 200,
-        dotRadius: 5
+        dotRadius: 5,
+        populationSize: 2000
     },
     protoPopulation: {},
     protoCell: {},
     protoPerson: {},
     init: function() {
+        this.config = Object.create(this.default);
         this.protoPopulation.config = Object.create(this.config);
         this.protoCell.config = Object.create(this.config);
         this.protoPerson.config = Object.create(this.config);
     },
     newInstance: function() {
         var Infection = Object.create(this);
+        Infection.protoPopulation = Object.create(this.protoPopulation);
+        Infection.protoPerson = Object.create(this.protoPerson);
+        Infection.protoCell = Object.create(this.protoCell);
         Infection.config = Object.create(this.config);
         Infection.init();
         return Infection;
     },
     configure: function(newConfig) {
         $.extend(this.config, newConfig);
+        if(Object.keys(newConfig).includes('R0'))
+            this.config.infectionProbability = this.config.R0/(5 * this.config.cellSize - 1) / this.config.infectiousDays;
     },
     resetToDefault: function() {
         $.extend(this.config, this.default);
     },
     setContext: function(ctx) {
-        this.config.ctx = ctx;
+        if(ctx)
+            this.config.ctx = ctx;
+        else
+            ctx = this.config.ctx;
         this.config.ctxWidth = ctx.canvas.clientWidth;
         this.config.ctxHeight = ctx.canvas.clientHeight;
+        this.config.dotRadius = Math.max(3, 5 * Math.sqrt(2000 / this.config.populationSize) * this.config.ctxWidth / 600 );
     }
 }
 Epidemic.protoPerson.init = function() {
@@ -63,7 +70,7 @@ Epidemic.protoPerson.vaccinate = function() {
 }
 Epidemic.protoPerson.infect = function() {
     this.state = this.state | 2;
-    this.generation = this.config.viableGenerations;
+    this.generation = this.config.infectiousDays;
 }
 Epidemic.protoPerson.isVaccinated = function() {
     return ((this.state & 1) === 1);
@@ -177,13 +184,17 @@ Epidemic.protoCell.kiss = function(args) {
     }
 }
 Epidemic.getNewPopulation = function(size) {
+    if(size)
+        this.config.populationSize = size;
+    else
+        size = this.config.populationSize;
     var newPopulation = Object.create(this.protoPopulation),
         popArray = [],
         cellSize = this.config.cellSize,
         columns = newPopulation.columns = Math.round(Math.sqrt(size * 3 / cellSize / 2)),
         rows = newPopulation.rows = Math.round(size/ columns / cellSize),
         row;
-    this.config.infectionProbability = this.config.R0/(5 * this.config.cellSize - 1) / this.config.viableGenerations;
+    this.config.infectionProbability = this.config.R0/(5 * this.config.cellSize - 1) / this.config.infectiousDays;
     for(var i = 0; i < columns; i++) {
         row = [];
         for(var j=0; j < rows; j++)
@@ -194,6 +205,8 @@ Epidemic.getNewPopulation = function(size) {
     newPopulation.popArray = popArray;
     newPopulation.days = 0;
     newPopulation.size = columns * rows * cellSize;
+    if (this.config.vaccinationRatio)
+        newPopulation.vaccinate(this.config.vaccinationRatio);
     return newPopulation;
 }
 Epidemic.protoPopulation.pickN = function(n) {
@@ -277,12 +290,13 @@ Epidemic.protoCell.draw = function(x, y, xscale, yscale) {
         canvasAbstractDot((x + elem.x) * xscale, (y + elem.y) * yscale, elemColor);
     });
 }
-Epidemic.protoPopulation.drawOut = function() {
+
+Epidemic.protoPopulation.draw = function() {
     var scaleX = 1 / this.columns,
         scaleY = 1 / this.rows,
         ctx = this.config.ctx,
-        ctxHeight = this.config.ctxHeight,
-        ctxWidth = this.config.ctxWidth;
+        ctxHeight = this.config.ctxHeight = this.config.ctx.canvas.clientHeight,
+        ctxWidth = this.config.ctxWidth = this.config.ctx.canvas.clientWidth;
     ctx.fillStyle = this.config.colorBackground;
     ctx.fillRect(0,0,ctxWidth,ctxHeight);
     for (var x = 0; x < this.columns; x++)
