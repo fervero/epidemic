@@ -1,5 +1,5 @@
 # Epidemic
-A simulator of an epidemic spreading through population.
+A simulator of an epidemic spreading through population. See it live [here](https://fervero.github.io/epidemic/index-en.html).
 
 ## The basics
 1. Link the epidemic.js file in your project. Create a new model. Within it, create a new population. Pass a 2d context to it, so it has a place to put them colored blots. Draw. Minimal code looks like this:
